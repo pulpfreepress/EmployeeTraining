@@ -104,7 +104,6 @@ namespace InfrastructureLayer.VO
 		{
 			return FullName + " is a " + Gender + " who is " + Age + " years old.";
 		}
-	}
-}
+	} // end class definition
+} // end namespace
 
-}

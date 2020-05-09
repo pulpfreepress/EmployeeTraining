@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BusinessObjectLayer.BO;
+using InfrastructureLayer.VO;
 
 namespace PresentationLayer
 {
@@ -10,8 +12,13 @@ namespace PresentationLayer
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
-            Console.Write("Hit any key to continue: ");
+            EmployeeBO employeeBO = new EmployeeBO();
+
+            foreach(EmployeeVO vo in employeeBO.GetAllEmployees())
+            {
+                Console.WriteLine(vo);
+            }
+
             Console.ReadLine();
         }
     }

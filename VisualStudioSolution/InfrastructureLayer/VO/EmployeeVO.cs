@@ -63,4 +63,5 @@ namespace InfrastructureLayer.VO
 			return (_employeeID + " " + base.ToString());
 		}
 
-	}
+	} // end class definition
+} // end namespace
