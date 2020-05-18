@@ -60,7 +60,7 @@ namespace InfrastructureLayer.VO
 
 		public override String ToString()
 		{
-			return (_employeeID + " " + base.ToString());
+			return (_employeeID + " " + base.ToString() + " " + UserName);
 		}
 
 	} // end class definition

@@ -12,8 +12,23 @@ namespace DataAccessLayer.DAO
 {
     public class EmployeeDAO : BaseDAO
     {
-        
-        /**************************************************
+
+        #region SQL Command Parameter Constants
+        /***************************************************
+		 * SQL Parameter Constants
+		 * *************************************************/
+        private const String EMPLOYEE_ID = "@employeeID";
+		private const String FIRST_NAME = "@firstName";
+		private const String MIDDLE_NAME = "@middleName";
+		private const String LAST_NAME = "@lastName";
+		private const String BIRTHDAY = "@birthday";
+		private const String PICTURE = "@picture";
+		private const String HIRE_DATE = "@hireDate";
+		private const String IS_ACTIVE = "@isactive";
+		private const String USER_NAME = "@username";
+		#endregion SQL Command Parameter Constants
+
+		/**************************************************
 		 * SQL String Constants
 		 * ***********************************************/
 		private const string SELECT_ALL_COLUMNS =
@@ -23,6 +38,21 @@ namespace DataAccessLayer.DAO
         private const string SELECT_ALL_EMPLOYEES =
             SELECT_ALL_COLUMNS +
             "FROM tbl_Employee ";
+
+		private const string INSERT_EMPLOYEE =
+			"INSERT INTO tbl_Employee " +
+				"(FirstName, MiddleName, LastName, Birthday, HireDate, IsActive, Username) " +
+			"VALUES (" + FIRST_NAME + ", " + MIDDLE_NAME + ", " + LAST_NAME + ", " + BIRTHDAY + ", " +
+					HIRE_DATE + ", " + IS_ACTIVE + ", " + USER_NAME + ") " +
+			"SELECT scope_identity()";
+
+		private const string SELECT_EMPLOYEE_BY_ID =
+			SELECT_ALL_COLUMNS +
+			"FROM tbl_Employee " +
+			"WHERE EmployeeID = " + EMPLOYEE_ID;
+
+
+
 
 		/// <summary>
 		/// Constructor
@@ -43,6 +73,34 @@ namespace DataAccessLayer.DAO
             return this.GetEmployeeList(command);
         }
 
+
+		public EmployeeVO InsertEmployee(EmployeeVO vo)
+		{
+			LogInfo("Entering InsertEmployee() method with employee: " + vo.ToString());
+			try
+			{
+				DbCommand command = DataBase.GetSqlStringCommand(INSERT_EMPLOYEE);
+				DataBase.AddInParameter(command, FIRST_NAME, DbType.String, vo.FirstName);
+				DataBase.AddInParameter(command, MIDDLE_NAME, DbType.String, vo.MiddleName);
+				DataBase.AddInParameter(command, LAST_NAME, DbType.String, vo.LastName);
+				DataBase.AddInParameter(command, BIRTHDAY, DbType.DateTime, vo.Birthday);
+				DataBase.AddInParameter(command, HIRE_DATE, DbType.DateTime, vo.HireDate);
+				DataBase.AddInParameter(command, IS_ACTIVE, DbType.Boolean, vo.IsActive);
+				DataBase.AddInParameter(command, USER_NAME, DbType.String, vo.UserName);
+				vo.EmployeeID = Convert.ToInt32(DataBase.ExecuteScalar(command));
+				return vo;
+			}
+			catch(Exception e)
+			{
+				LogError("Error inserting employee into database: " + e);
+				throw e;
+			}
+
+		}
+
+
+
+		/********* PRIVATE METHODS *********************************/
 
 		private List<EmployeeVO> GetEmployeeList(DbCommand command)
 		{
