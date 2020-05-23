@@ -51,7 +51,20 @@ namespace DataAccessLayer.DAO
 			"FROM tbl_Employee " +
 			"WHERE EmployeeID = " + EMPLOYEE_ID;
 
+		private const string DELETE_EMPLOYEE =
+			"DELETE FROM tbl_Employee " +
+			"WHERE EmployeeID = " + EMPLOYEE_ID;
 
+		private const string UPDATE_EMPLOYEE = 
+			"UPDATE tbl_Employee " +
+			"SET FirstName = " + FIRST_NAME  + ", " +
+			    "MiddleNme = " + MIDDLE_NAME + ", " +
+				"LastName = "  + LAST_NAME   + ", " +
+				"Birthday = "  + BIRTHDAY    + ", " +
+				"HireDate = "  + HIRE_DATE   + ", " +
+				"IsActive = "  + IS_ACTIVE   + ", " +
+			    "Username = "  + USER_NAME   + " " +
+			"WHERE EmployeeID = " + EMPLOYEE_ID;
 
 
 		/// <summary>
@@ -73,7 +86,11 @@ namespace DataAccessLayer.DAO
             return this.GetEmployeeList(command);
         }
 
-
+		/// <summary>
+		/// InsertEmployee method
+		/// </summary>
+		/// <param name="vo">Valid fully-populated EmployeeVO object</param>
+		/// <returns></returns>
 		public EmployeeVO InsertEmployee(EmployeeVO vo)
 		{
 			LogInfo("Entering InsertEmployee() method with employee: " + vo.ToString());
@@ -98,6 +115,74 @@ namespace DataAccessLayer.DAO
 
 		}
 
+		/// <summary>
+		/// UpdateEmployee method
+		/// </summary>
+		/// <param name="vo">Valid EmployeeVO</param>
+		/// <returns></returns>
+		public EmployeeVO UpdateEmployee(EmployeeVO vo)
+		{
+			LogDebug("Entering UpdateEmployee() method with employee: " + vo);
+			int rows_affected = 0;
+
+			try
+			{
+				DbCommand command = DataBase.GetSqlStringCommand(UPDATE_EMPLOYEE);
+				DataBase.AddInParameter(command, FIRST_NAME, DbType.String, vo.FirstName);
+				DataBase.AddInParameter(command, MIDDLE_NAME, DbType.String, vo.MiddleName);
+				DataBase.AddInParameter(command, LAST_NAME, DbType.String, vo.LastName);
+				DataBase.AddInParameter(command, BIRTHDAY, DbType.DateTime, vo.Birthday);
+				DataBase.AddInParameter(command, HIRE_DATE, DbType.DateTime, vo.HireDate);
+				DataBase.AddInParameter(command, IS_ACTIVE, DbType.Boolean, vo.IsActive);
+				DataBase.AddInParameter(command, USER_NAME, DbType.String, vo.UserName);
+				DataBase.AddInParameter(command, EMPLOYEE_ID, DbType.Int32, vo.EmployeeID);
+				rows_affected = DataBase.ExecuteNonQuery(command);
+			}
+			catch(Exception e)
+			{
+				LogError("Problem updating employee. " + e);
+				throw e;
+			}
+
+			if(rows_affected == 0)
+			{
+				LogError("Error updating employee: " + vo);
+				throw new Exception("EmployeeID " + vo.EmployeeID + " does not exist in the database.");
+			}
+
+			return vo;
+		}
+
+
+
+		/// <summary>
+		/// DeleteEmployee
+		/// </summary>
+		/// <param name="vo"> Valid EmployeeVO object. </param>
+
+		public void DeleteEmployee(EmployeeVO vo)
+		{
+			LogDebug("Entering DeleteEmployee() method with employee: " + vo);
+			int rows_affected = 0;
+
+			try
+			{
+				DbCommand command = DataBase.GetSqlStringCommand(DELETE_EMPLOYEE);
+				DataBase.AddInParameter(command, EMPLOYEE_ID, DbType.Int32, vo.EmployeeID);
+				rows_affected = DataBase.ExecuteNonQuery(command);
+
+			}catch(Exception e)
+			{
+				LogError("Problem Deleting Employee! " + e);
+				throw e;
+			}
+
+			if(rows_affected == 0)
+			{
+				LogError("No rows deleted for employee: " + vo);
+				throw new Exception("EmployeeID does not exist in the database!");
+			}
+		}
 
 
 		/********* PRIVATE METHODS *********************************/

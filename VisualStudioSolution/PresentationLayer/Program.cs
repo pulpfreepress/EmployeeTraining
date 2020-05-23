@@ -30,11 +30,11 @@ namespace PresentationLayer
             employee.HireDate = new DateTime(2020, 05, 17);
             employee.IsActive = true;
             employee.Gender = PersonVO.Sex.FEMALE;
-            employee.UserName = "lrichter1";
+            employee.UserName = "lrichter2";
 
             try
             {
-                employeeBO.InsertEmployee(employee);
+                employee = employeeBO.InsertEmployee(employee);
             }catch(Exception e)
             {
                 Console.WriteLine("Problem inserting employee: " + e);
@@ -47,7 +47,27 @@ namespace PresentationLayer
                 Console.WriteLine(vo);
             }
 
-            
+            Console.Write("Hit any key to continue: ");
+            Console.ReadLine();
+
+            Console.WriteLine("\n---------- Delete Employee with ID: " + employee.EmployeeID + "-------------------------------------\n");
+
+
+            try
+            {
+                employeeBO.DeleteEmployee(employee);
+            }catch(Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            Console.WriteLine("\n-------------------------------------------------\n");
+
+            foreach (EmployeeVO vo in employeeBO.GetAllEmployees())
+            {
+                Console.WriteLine(vo);
+            }
+
 
             Console.ReadLine();
         }

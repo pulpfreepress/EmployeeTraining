@@ -68,5 +68,52 @@ namespace BusinessObjectLayer.BO
             return vo;
         }
 
-    }
-}
+
+        /// <summary>
+        /// DeleteEmployee method
+        /// </summary>
+        /// <param name="vo">Valid EmployeeVO object</param>
+        /// <returns></returns>
+        public void DeleteEmployee(EmployeeVO vo)
+        {
+            LogDebug("Entering DeleteEmployee() method.");
+            try
+            {
+                EmployeeDAO dao = new EmployeeDAO();
+                dao.DeleteEmployee(vo);
+            } 
+            catch (Exception e)
+            {
+                LogError(e);
+                throw e;
+            }
+        }
+
+        /// <summary>
+        /// UpdateEmployee method
+        /// </summary>
+        /// <param name="vo">Valid EmployeeVO object</param>
+        /// <returns></returns>
+        public EmployeeVO UpdateEmployee(EmployeeVO vo)
+        {
+            LogDebug("Entering UpdateEmployee() method.");
+
+            try
+            {
+                EmployeeDAO dao = new EmployeeDAO();
+                return dao.UpdateEmployee(vo);
+
+
+            }
+            catch(Exception e)
+            {
+                LogError(e);
+                throw e;
+            }
+        }
+
+
+
+
+    } // end class definition
+} // end namespace
