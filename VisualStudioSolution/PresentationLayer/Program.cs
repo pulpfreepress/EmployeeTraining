@@ -68,6 +68,21 @@ namespace PresentationLayer
                 Console.WriteLine(vo);
             }
 
+            List<EmployeeVO> employee_list = employeeBO.GetAllEmployees();
+            employee_list[1].Gender = EmployeeVO.Sex.FEMALE;
+            employeeBO.UpdateEmployee(employee_list[1]);
+
+            employee_list[3].Gender = EmployeeVO.Sex.FEMALE;
+            employeeBO.UpdateEmployee(employee_list[3]);
+
+            Console.WriteLine("\n-------------------------------------------------\n");
+
+            foreach (EmployeeVO vo in employeeBO.GetAllEmployees())
+            {
+                Console.WriteLine(vo);
+            }
+
+            Console.WriteLine("\n----- DONE - Enter Return To Exit -------------------\n");
 
             Console.ReadLine();
         }

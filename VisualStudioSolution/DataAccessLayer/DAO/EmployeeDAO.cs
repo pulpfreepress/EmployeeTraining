@@ -17,22 +17,23 @@ namespace DataAccessLayer.DAO
         /***************************************************
 		 * SQL Parameter Constants
 		 * *************************************************/
-        private const String EMPLOYEE_ID = "@employeeID";
-		private const String FIRST_NAME = "@firstName";
-		private const String MIDDLE_NAME = "@middleName";
-		private const String LAST_NAME = "@lastName";
-		private const String BIRTHDAY = "@birthday";
-		private const String PICTURE = "@picture";
-		private const String HIRE_DATE = "@hireDate";
-		private const String IS_ACTIVE = "@isactive";
-		private const String USER_NAME = "@username";
+        private const string EMPLOYEE_ID = "@employeeID";
+		private const string FIRST_NAME = "@firstName";
+		private const string MIDDLE_NAME = "@middleName";
+		private const string LAST_NAME = "@lastName";
+		private const string BIRTHDAY = "@birthday";
+		private const string PICTURE = "@picture";
+		private const string HIRE_DATE = "@hireDate";
+		private const string IS_ACTIVE = "@isactive";
+		private const string USER_NAME = "@username";
+		private const string GENDER = "@gender";
 		#endregion SQL Command Parameter Constants
 
 		/**************************************************
 		 * SQL String Constants
 		 * ***********************************************/
 		private const string SELECT_ALL_COLUMNS =
-            "SELECT EmployeeID, FirstName, MiddleName, LastName, Birthday, HireDate, IsActive, Username ";
+            "SELECT EmployeeID, FirstName, MiddleName, LastName, Birthday, HireDate, IsActive, Username, Gender ";
 
 
         private const string SELECT_ALL_EMPLOYEES =
@@ -41,9 +42,9 @@ namespace DataAccessLayer.DAO
 
 		private const string INSERT_EMPLOYEE =
 			"INSERT INTO tbl_Employee " +
-				"(FirstName, MiddleName, LastName, Birthday, HireDate, IsActive, Username) " +
+				"(FirstName, MiddleName, LastName, Birthday, HireDate, IsActive, Username, Gender) " +
 			"VALUES (" + FIRST_NAME + ", " + MIDDLE_NAME + ", " + LAST_NAME + ", " + BIRTHDAY + ", " +
-					HIRE_DATE + ", " + IS_ACTIVE + ", " + USER_NAME + ") " +
+					HIRE_DATE + ", " + IS_ACTIVE + ", " + USER_NAME + ", " + GENDER + ") " +
 			"SELECT scope_identity()";
 
 		private const string SELECT_EMPLOYEE_BY_ID =
@@ -58,12 +59,13 @@ namespace DataAccessLayer.DAO
 		private const string UPDATE_EMPLOYEE = 
 			"UPDATE tbl_Employee " +
 			"SET FirstName = " + FIRST_NAME  + ", " +
-			    "MiddleNme = " + MIDDLE_NAME + ", " +
+			    "MiddleName = " + MIDDLE_NAME + ", " +
 				"LastName = "  + LAST_NAME   + ", " +
 				"Birthday = "  + BIRTHDAY    + ", " +
 				"HireDate = "  + HIRE_DATE   + ", " +
 				"IsActive = "  + IS_ACTIVE   + ", " +
-			    "Username = "  + USER_NAME   + " " +
+			    "Username = "  + USER_NAME   + ", " +
+			    "Gender   = "  + GENDER      + "  " +
 			"WHERE EmployeeID = " + EMPLOYEE_ID;
 
 
@@ -104,6 +106,16 @@ namespace DataAccessLayer.DAO
 				DataBase.AddInParameter(command, HIRE_DATE, DbType.DateTime, vo.HireDate);
 				DataBase.AddInParameter(command, IS_ACTIVE, DbType.Boolean, vo.IsActive);
 				DataBase.AddInParameter(command, USER_NAME, DbType.String, vo.UserName);
+				switch (vo.Gender)
+				{
+					case EmployeeVO.Sex.MALE:
+						DataBase.AddInParameter(command, GENDER, DbType.String, "M");
+						break;
+					case EmployeeVO.Sex.FEMALE:
+						DataBase.AddInParameter(command, GENDER, DbType.String, "F");
+						break;
+				}
+
 				vo.EmployeeID = Convert.ToInt32(DataBase.ExecuteScalar(command));
 				return vo;
 			}
@@ -135,6 +147,15 @@ namespace DataAccessLayer.DAO
 				DataBase.AddInParameter(command, HIRE_DATE, DbType.DateTime, vo.HireDate);
 				DataBase.AddInParameter(command, IS_ACTIVE, DbType.Boolean, vo.IsActive);
 				DataBase.AddInParameter(command, USER_NAME, DbType.String, vo.UserName);
+				switch (vo.Gender)
+				{
+					case EmployeeVO.Sex.MALE:
+						DataBase.AddInParameter(command, GENDER, DbType.String, "M");
+						break;
+					case EmployeeVO.Sex.FEMALE:
+						DataBase.AddInParameter(command, GENDER, DbType.String, "F");
+						break;
+				}
 				DataBase.AddInParameter(command, EMPLOYEE_ID, DbType.Int32, vo.EmployeeID);
 				rows_affected = DataBase.ExecuteNonQuery(command);
 			}
@@ -223,6 +244,16 @@ namespace DataAccessLayer.DAO
 			empVO.HireDate = reader.GetDateTime(5);
 			empVO.IsActive = reader.GetBoolean(6);
 			empVO.UserName = reader.GetString(7);
+			string gender = reader.GetString(8);
+			switch (gender)
+			{
+				case "M":
+					empVO.Gender = EmployeeVO.Sex.MALE;
+					break;
+				case "F":
+					empVO.Gender = EmployeeVO.Sex.FEMALE;
+					break;
+			}
 
 			return empVO;
 		}
