@@ -33,7 +33,7 @@ namespace DataAccessLayer.DAO
 		 * SQL String Constants
 		 * ***********************************************/
 		private const string SELECT_ALL_COLUMNS =
-            "SELECT EmployeeID, FirstName, MiddleName, LastName, Birthday, HireDate, IsActive, Username, Gender ";
+            "SELECT EmployeeID, FirstName, MiddleName, LastName, Birthday, HireDate, IsActive, Username, Gender, Picture ";
 
 
         private const string SELECT_ALL_EMPLOYEES =
@@ -42,9 +42,9 @@ namespace DataAccessLayer.DAO
 
 		private const string INSERT_EMPLOYEE =
 			"INSERT INTO tbl_Employee " +
-				"(FirstName, MiddleName, LastName, Birthday, HireDate, IsActive, Username, Gender) " +
+				"(FirstName, MiddleName, LastName, Birthday, HireDate, IsActive, Username, Gender, Picture) " +
 			"VALUES (" + FIRST_NAME + ", " + MIDDLE_NAME + ", " + LAST_NAME + ", " + BIRTHDAY + ", " +
-					HIRE_DATE + ", " + IS_ACTIVE + ", " + USER_NAME + ", " + GENDER + ") " +
+					HIRE_DATE + ", " + IS_ACTIVE + ", " + USER_NAME + ", " + GENDER + ", " + PICTURE + ") " +
 			"SELECT scope_identity()";
 
 		private const string SELECT_EMPLOYEE_BY_ID =
@@ -65,7 +65,8 @@ namespace DataAccessLayer.DAO
 				"HireDate = "  + HIRE_DATE   + ", " +
 				"IsActive = "  + IS_ACTIVE   + ", " +
 			    "Username = "  + USER_NAME   + ", " +
-			    "Gender   = "  + GENDER      + "  " +
+			    "Gender   = "  + GENDER      + ", " +
+			    "Picture  = "  + PICTURE     + "  " +
 			"WHERE EmployeeID = " + EMPLOYEE_ID;
 
 
@@ -116,6 +117,12 @@ namespace DataAccessLayer.DAO
 						break;
 				}
 
+				if (vo.Picture != null)
+				{
+					LogDebug("Inserting image...");
+					DataBase.AddInParameter(command, PICTURE, DbType.Binary, vo.Picture);
+				}
+
 				vo.EmployeeID = Convert.ToInt32(DataBase.ExecuteScalar(command));
 				return vo;
 			}
@@ -156,6 +163,13 @@ namespace DataAccessLayer.DAO
 						DataBase.AddInParameter(command, GENDER, DbType.String, "F");
 						break;
 				}
+
+				if (vo.Picture != null)
+				{
+					LogDebug("Inserting image...");
+					DataBase.AddInParameter(command, PICTURE, DbType.Binary, vo.Picture);
+				}
+
 				DataBase.AddInParameter(command, EMPLOYEE_ID, DbType.Int32, vo.EmployeeID);
 				rows_affected = DataBase.ExecuteNonQuery(command);
 			}
@@ -253,6 +267,11 @@ namespace DataAccessLayer.DAO
 				case "F":
 					empVO.Gender = EmployeeVO.Sex.FEMALE;
 					break;
+			}
+
+			if (!reader.IsDBNull(9))
+			{
+				empVO.Picture = (byte[])reader.GetValue(9);
 			}
 
 			return empVO;

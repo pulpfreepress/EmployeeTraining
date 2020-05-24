@@ -46,7 +46,8 @@ namespace BusinessObjectLayer.BO
                                          DateTime hiredate,
                                          Boolean is_active,
                                          string username,
-                                         EmployeeVO.Sex gender)
+                                         EmployeeVO.Sex gender,
+                                         byte[] picture)
         {
             EmployeeVO vo = new EmployeeVO();
             vo.FirstName = first_name;
@@ -57,6 +58,7 @@ namespace BusinessObjectLayer.BO
             vo.UserName = username;
             vo.IsActive = is_active;
             vo.Gender = gender;
+            vo.Picture = picture;
 
             try
             {

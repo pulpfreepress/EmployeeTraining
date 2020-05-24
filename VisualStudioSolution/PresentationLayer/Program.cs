@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using BusinessObjectLayer.BO;
 using InfrastructureLayer.VO;
+using System.IO;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace PresentationLayer
 {
@@ -12,6 +15,23 @@ namespace PresentationLayer
     {
         static void Main(string[] args)
         {
+
+            Image picture = null;
+            MemoryStream ms = null;
+            byte[] picture_bytes = null;
+
+            try
+            {
+                picture = new Bitmap(@"C:\Projects\EmployeeTraining\Images\Rick.jpg");
+                ms = new MemoryStream();
+                picture.Save(ms, ImageFormat.Jpeg);
+                picture_bytes = ms.ToArray();
+
+            }catch(Exception e)
+            {
+                throw e;
+            }
+
             EmployeeBO employeeBO = new EmployeeBO();
 
             foreach(EmployeeVO vo in employeeBO.GetAllEmployees())
@@ -31,6 +51,7 @@ namespace PresentationLayer
             employee.IsActive = true;
             employee.Gender = PersonVO.Sex.FEMALE;
             employee.UserName = "lrichter2";
+            employee.Picture = picture_bytes;
 
             try
             {
@@ -70,16 +91,24 @@ namespace PresentationLayer
 
             List<EmployeeVO> employee_list = employeeBO.GetAllEmployees();
             employee_list[1].Gender = EmployeeVO.Sex.FEMALE;
+            employee_list[1].Picture = picture_bytes;
             employeeBO.UpdateEmployee(employee_list[1]);
 
+
             employee_list[3].Gender = EmployeeVO.Sex.FEMALE;
+            employee_list[3].Picture = picture_bytes;
             employeeBO.UpdateEmployee(employee_list[3]);
+
 
             Console.WriteLine("\n-------------------------------------------------\n");
 
             foreach (EmployeeVO vo in employeeBO.GetAllEmployees())
             {
                 Console.WriteLine(vo);
+                if(vo.Picture != null)
+                {
+                    Console.WriteLine(Encoding.Default.GetString(vo.Picture));
+                }
             }
 
             Console.WriteLine("\n----- DONE - Enter Return To Exit -------------------\n");
