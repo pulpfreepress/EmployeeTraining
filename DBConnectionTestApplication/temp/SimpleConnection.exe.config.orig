@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+  <configSections>
+    <section name="dataConfiguration"
+						 type="Microsoft.Practices.EnterpriseLibrary.Data.Configuration.DatabaseSettings, 
+									 Microsoft.Practices.EnterpriseLibrary.Data, 
+									 Version=6.0.0.0, Culture=neutral, 
+									 PublicKeyToken=31bf3856ad364e35" requirePermission="true" />
+  </configSections>
+  <dataConfiguration defaultDatabase="EmployeeTrainingDatabase" />
+  <connectionStrings>
+    <add name="EmployeeTrainingDatabase"
+      connectionString="Database=EmployeeTraining;
+                        Server=Apollo;
+						Initial Catalog=EmployeeTraining;
+                        User ID=EmployeeTraining;
+                        Password=password;
+                        MultipleActiveResultSets=True"
+      providerName="System.Data.SqlClient" />
+	  
+	 <add name="Vesta"
+      connectionString="Server=VESTA\SQLSERVER2019DEV;
+						Database=Master;
+						User ID=sa;
+						Password=P@ssword12345"
+						
+                        
+      providerName="System.Data.SqlClient" />
+  </connectionStrings>
+  <startup>
+    <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.7.2" />
+  </startup>
+</configuration>
